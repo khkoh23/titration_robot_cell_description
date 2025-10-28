@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <xacro:macro name="titration_robot_cell" params="
+    parent
+    *origin
+    ur_type
+    joint_limits_parameters_file
+    kinematics_parameters_file
+    physical_parameters_file
+    visual_parameters_file
+    ">
+
+    <material name="dark_grey">
+      <color rgba="0.25 0.25 0.25 1"/>
+    </material>
+
+    <material name="grey">
+      <color rgba="0.5 0.5 0.5 1"/>
+    </material>
+
+    <material name="white">
+      <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="light_blue">
+      <color rgba="0.62 0.85 0.90 0.75"/>
+    </material>
+
+    <material name="light_purple">
+      <color rgba="0.80 0.76 0.89 0.75"/>
+    </material>
+
+    <xacro:property name="table_width" value="0.9" />
+    <xacro:property name="table_height" value="0.85" />
+    <xacro:property name="table_ur5_offset" value="0.3" />
+    <xacro:property name="wall_width" value="3.0" />
+    <xacro:property name="wall_height" value="3.0" />
+    <xacro:property name="wall_thickness" value="0.01" />
+    <xacro:property name="wall_offset" value="0.75" />
+    <xacro:property name="table_beaker_offset" value="0.01" />
+    <xacro:property name="table_stirrer_offset" value="0.01" />
+    <xacro:property name="stirrer_height" value="0.057" />
+    <xacro:property name="meter_width" value="0.096" />
+    <xacro:property name="meter_depth" value="0.112" />
+    <xacro:property name="probe_diameter" value="0.022" />
+    <xacro:property name="probe_length" value="0.164" />
+    <xacro:property name="probe_height_offset" value="0.100" />
+    <xacro:property name="probe_radial_offset" value="0.025" />
+
+    <link name="wall">
+      <visual>
+        <geometry>
+          <box size="${wall_thickness} ${wall_width} ${wall_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="white"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${wall_thickness} ${wall_width} ${wall_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="table">
+      <visual>
+        <geometry>
+          <box size="${table_width} ${table_width} ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="dark_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${table_width} ${table_width} ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="beaker_titrant">
+      <visual>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/beaker.stl" scale="0.01 0.01 0.01" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="light_blue"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/beaker.stl" scale="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="stirrer">
+      <visual>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/stirrer.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/stirrer.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="beaker_analyte">
+      <visual>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/beaker.stl" scale="0.01 0.01 0.01" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="light_purple"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/beaker.stl" scale="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="ph_meter">
+      <visual>
+        <geometry>
+          <box size="${meter_depth} ${meter_width} ${meter_width}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${meter_depth} ${meter_width} ${meter_width}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="ph_probe">
+      <visual>
+        <geometry>
+          <cylinder radius="${probe_diameter/2}" length="${probe_length}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${probe_diameter/2}" length="${probe_length}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="robot_mount"/>
+
+    <joint name="parent_to_wall" type="fixed">
+      <parent link="${parent}"/>
+      <child link="wall"/>
+      <origin xyz="-0.750 0 ${wall_height/2}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="parent_to_table" type="fixed">
+      <!-- <xacro:insert_block name="origin" /> -->
+      <parent link="${parent}" />
+      <child link="table" />
+      <origin xyz="0 0 ${table_height/2}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="table_to_beaker_titrant" type="fixed">
+      <parent link="table"/>
+      <child link="beaker_titrant"/>
+      <origin xyz="${table_width/4} ${-table_width/4} ${table_height/2+table_beaker_offset}" rpy="${pi/2} 0 0" />
+    </joint>
+
+    <joint name="table_to_stirrer" type="fixed">
+      <parent link="table"/>
+      <child link="stirrer"/>
+      <origin xyz="${table_width/4+0.185} ${table_width/4} ${table_height/2+table_stirrer_offset}" rpy="${pi/2} 0 ${pi/2}" />
+    </joint>
+
+    <joint name="table_to_beaker_analyte" type="fixed">
+      <parent link="table"/>
+      <child link="beaker_analyte"/>
+      <origin xyz="${table_width/4} ${table_width/4} ${table_height/2+table_beaker_offset+stirrer_height}" rpy="${pi/2} 0 0" />
+    </joint>
+
+    <joint name="table_to_ph_meter" type="fixed">
+      <parent link="table"/>
+      <child link="ph_meter"/>
+      <origin xyz="0 ${table_width/4} ${table_height/2+meter_width/2}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="beaker_analyte_to_ph_probe" type="fixed">
+      <parent link="beaker_analyte"/>
+      <child link="ph_probe"/>
+      <origin xyz="0 ${probe_height_offset} ${-probe_radial_offset}" rpy="${-pi/2} 0 0" />
+    </joint>
+
+    <joint name="table_to_robot_mount" type="fixed">
+      <parent link="table"/>
+      <child link="robot_mount"/>
+      <origin xyz="${-table_ur5_offset} 0 ${table_height/2}" rpy="0 0 ${pi}" />
+    </joint>
+
+    <!--This will create the specific robot-->
+    <xacro:ur_robot
+      name="${ur_type}"
+      tf_prefix="${ur_type}_"
+      parent="robot_mount"
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"
+    >
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:ur_robot>
+  </xacro:macro>
+
+</robot>
