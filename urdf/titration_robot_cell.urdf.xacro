@@ -3,11 +3,20 @@
 
   <xacro:include filename="$(find titration_robot_cell_description)/urdf/titration_robot_cell_macro.xacro"/>
 
+  <!-- end-effector -->
+  <xacro:include filename="$(find titration_robot_cell_description)/urdf/pipette_tool.xacro" />
+
   <xacro:arg name="ur_type" default="ur5"/>
   <xacro:arg name="joint_limits_parameters_file" default="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"/>
   <xacro:arg name="kinematics_parameters_file" default="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"/>
   <xacro:arg name="physical_parameters_file" default="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"/>
   <xacro:arg name="visual_parameters_file" default="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml"/>
+
+  <!-- end-effector -->
+  <xacro:pipette_tool 
+    ur_type="$(arg ur_type)"
+    connected_to="tool0"
+  />
 
   <link name="world"/>
   <!--This will create the scene where the robot is located in-->
