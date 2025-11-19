@@ -4,7 +4,7 @@
   ur_type
   connected_to
   ">
-    <xacro:property name="pipette_tool_offset" value="0.111" />
+    <xacro:property name="pipette_tool_offset" value="0.116" />
     <xacro:property name="pipette_tip_offset" value="0.119" />
     <xacro:property name="tcp_offset" value="0.001" />
 
