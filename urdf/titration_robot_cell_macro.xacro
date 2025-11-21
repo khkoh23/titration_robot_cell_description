@@ -32,6 +32,10 @@
       <color rgba="0.80 0.76 0.89 0.75"/>
     </material>
 
+    <material name="light_red">
+      <color rgba="1 0 0 0.5"/>
+    </material>
+
     <xacro:property name="table_width" value="0.9" />
     <xacro:property name="table_height" value="0.85" />
     <xacro:property name="table_ur5_offset" value="0.3" />
@@ -50,6 +54,7 @@
     <xacro:property name="probe_length" value="0.164" />
     <xacro:property name="probe_height_offset" value="0.100" />
     <xacro:property name="probe_radial_offset" value="0.025" />
+    <xacro:property name="retort_y_offset" value="0.078" />
 
     <link name="wall">
       <visual>
@@ -109,7 +114,7 @@
       </visual>
       <collision>
         <geometry>
-          <box size="${stirrer_width} ${stirrer_depth} ${stirrer_height}"/>
+          <box size="${stirrer_depth} ${stirrer_width} ${stirrer_height}"/>
         </geometry>
         <origin rpy="0 0 0" xyz="0 0 0"/>
       </collision>
@@ -153,13 +158,29 @@
           <cylinder radius="${probe_diameter/2}" length="${probe_length}"/>
         </geometry>
         <origin rpy="0 0 0" xyz="0 0 0"/>
-        <material name="grey"/>
+        <material name="light_red"/>
       </visual>
       <collision>
         <geometry>
           <cylinder radius="${probe_diameter/2}" length="${probe_length}"/>
         </geometry>
         <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="retort_stand">
+      <visual>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/retort_stand.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
+        <material name="grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://titration_robot_cell_description/meshes/retort_stand.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
       </collision>
     </link>
 
@@ -199,13 +220,19 @@
     <joint name="table_to_ph_meter" type="fixed">
       <parent link="table"/>
       <child link="ph_meter"/>
-      <origin xyz="${-table_width/4} ${table_width/4} ${table_height/2+meter_width/2}" rpy="0 0 0" />
+      <origin xyz="${-table_width/8} 0 ${table_height/2+meter_width/2}" rpy="0 0 0" />
     </joint>
 
     <joint name="beaker_analyte_to_ph_probe" type="fixed">
       <parent link="beaker_analyte"/>
       <child link="ph_probe"/>
       <origin xyz="0 ${probe_height_offset} ${-probe_radial_offset}" rpy="${-pi/2} 0 0" />
+    </joint>
+
+    <joint name="table_to_retort_stand" type="fixed">
+      <parent link="table"/>
+      <child link="retort_stand"/>
+      <origin xyz="0 ${table_width/4+retort_y_offset} ${table_height/2}" rpy="0 0 0" />
     </joint>
 
     <joint name="table_to_robot_mount" type="fixed">
