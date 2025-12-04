@@ -20,6 +20,10 @@
       <color rgba="0.5 0.5 0.5 1"/>
     </material>
 
+    <material name="invisible">
+      <color rgba="0.9 0.9 0.9 0.1"/>
+    </material>
+
     <material name="white">
       <color rgba="1 1 1 1"/>
     </material>
@@ -83,6 +87,38 @@
       <collision>
         <geometry>
           <box size="${table_width} ${table_width} ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="right_barrier">
+      <visual>
+        <geometry>
+          <box size="${table_width} 0.005 ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="invisible"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${table_width} 0.005 ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+    </link>
+
+    <link name="left_barrier">
+      <visual>
+        <geometry>
+          <box size="${table_width} 0.005 ${table_height}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="invisible"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${table_width} 0.005 ${table_height}"/>
         </geometry>
         <origin rpy="0 0 0" xyz="0 0 0"/>
       </collision>
@@ -199,7 +235,19 @@
       <origin xyz="0 0 ${table_height/2}" rpy="0 0 0" />
     </joint>
 
-    <joint name="table_to_beaker_titrant" type="fixed">
+    <joint name="table_to_right_barrier" type="fixed">
+      <parent link="table"/>
+      <child link="right_barrier"/>
+      <origin xyz="0 ${-table_width/2+0.050} ${table_height}" rpy="0 0 0" />
+    </joint>
+
+    <joint name="table_to_left_barrier" type="fixed">
+      <parent link="table"/>
+      <child link="left_barrier"/>
+      <origin xyz="0 ${table_width/2-0.050} ${table_height}" rpy="0 0 0" />
+    </joint>
+
+     <joint name="table_to_beaker_titrant" type="fixed">
       <parent link="table"/>
       <child link="beaker_titrant"/>
       <origin xyz="${table_width/4} ${-table_width/4} ${table_height/2+table_beaker_offset}" rpy="${pi/2} 0 0" />
